@@ -48,7 +48,7 @@ Strict mode enabled in `tsconfig.app.json`:
   - Spacing: `$spacing-sm`, `$spacing-md`, `$spacing-lg`, `$spacing-xl`
   - Fonts: `$font-primary`, `$font-size-base`, `$font-weight-medium`
   - Utilities: `@include flex-center`, `@include flex-between`, `@include responsive('md')`
-- Import variables in component files: `@import '../styles/variables.scss'`
+- Import variables in component files: `@use '../styles/variables' as *;`
 - Material-UI components can be styled with emotion or custom SCSS
 - **Naming convention:** Use BEM-like naming for CSS classes (e.g., `.card__header`, `.button--primary`)
 
@@ -127,7 +127,7 @@ SCSS is configured with Sass compiler. Key files:
 **Usage example:**
 ```scss
 // In a component SCSS file
-@import '../styles/variables.scss';
+@use '../styles/variables' as *;
 
 .header {
   @include flex-between;
