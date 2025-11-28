@@ -7,6 +7,7 @@ FB Clone v2 is a React + TypeScript application built with Vite and styled using
 - React 19.2.0 with TypeScript
 - Vite (via rolldown-vite) for bundling and dev server
 - Material-UI (@mui/material) + Emotion for styling
+- Axios for HTTP requests with interceptors
 - SWC for JSX compilation
 - Bun as the package manager
 
@@ -140,11 +141,37 @@ SCSS is configured with Sass compiler. Key files:
   }
 }
 ```
-
 ### Material-UI Setup
 MUI is pre-configured with Emotion. When adding new components:
 1. Import from `@mui/material`: `import { Button, Box } from '@mui/material'`
 2. Use theme provider if customization needed (currently not configured, can extend)
+3. Can combine with SCSS for additional styling flexibility
+
+### Axios HTTP Client
+Axios is configured with request/response interceptors for API communication. Key files:
+- `src/services/apiClient.ts` - Axios instance with interceptors for auth tokens and error handling
+- `src/services/authService.ts` - Example API service for authentication endpoints
+- **Base URL:** Uses `VITE_API_BASE_URL` environment variable (defaults to `http://localhost:3000/api`)
+- **Request interceptor:** Automatically adds `Authorization: Bearer <token>` header from localStorage
+- **Response interceptor:** Handles 401 errors by clearing auth token and redirecting to login
+
+## Files to Know
+- `.github/copilot-instructions.md` - This file (AI guidelines)
+- `vite.config.ts` - Vite + React SWC configuration
+- `eslint.config.js` - Flat ESLint config with TypeScript & React Hooks plugins
+- `tsconfig.app.json` - Application TypeScript settings (strict mode)
+- `commitlint.config.js` - Commit message validation rules
+- `src/styles/variables.scss` - SCSS variables and mixins
+- `src/styles/globals.scss` - Global styles and reset
+- `src/services/apiClient.ts` - Axios instance with interceptors
+- `src/services/authService.ts` - Example API service
+- `package.json` - Dependencies and build scripts
+
+// Token is automatically added to subsequent requests
+const currentUser = await authService.getCurrentUser()
+```
+
+Create additional service files in `src/services/` for different API domains (postService, userService, etc.)t configured, can extend)
 3. Can combine with SCSS for additional styling flexibility
 
 ### Future Facebook Features
