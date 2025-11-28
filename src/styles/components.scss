@@ -1,0 +1,33 @@
+@import '../styles/variables.scss';
+
+.card {
+  background-color: $bg-primary;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  box-shadow: $shadow-sm;
+  transition: box-shadow $transition-base;
+
+  &:hover {
+    box-shadow: $shadow-md;
+  }
+}
+
+.button {
+  @include flex-center;
+  padding: $spacing-sm $spacing-md;
+  background-color: $primary;
+  color: white;
+  border-radius: $radius-sm;
+  font-weight: $font-weight-medium;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background-color: $primary-dark;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

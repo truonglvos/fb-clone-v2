@@ -39,10 +39,18 @@ Strict mode enabled in `tsconfig.app.json`:
 - Components should use `.tsx` extension
 
 ### Styling
-- Material-UI components with Emotion CSS-in-JS
-- Global styles in `src/index.css`
-- Component-scoped styles in corresponding `.css` files (e.g., `App.css`)
-- Import MUI components from `@mui/material` (e.g., `import Button from '@mui/material/Button'`)
+- **SCSS with Sass compiler** - Project uses SCSS for enhanced CSS capabilities
+- Global styles in `src/styles/globals.scss` - Imports variables, resets, and base typography
+- Variables and mixins in `src/styles/variables.scss` - Colors, spacing, typography, breakpoints, and responsive mixins
+- Component-scoped styles in `src/styles/<ComponentName>.scss` (e.g., `src/styles/components.scss`)
+- **Available SCSS variables and mixins:**
+  - Colors: `$primary`, `$secondary`, `$text-primary`, `$bg-secondary`, `$border-color`
+  - Spacing: `$spacing-sm`, `$spacing-md`, `$spacing-lg`, `$spacing-xl`
+  - Fonts: `$font-primary`, `$font-size-base`, `$font-weight-medium`
+  - Utilities: `@include flex-center`, `@include flex-between`, `@include responsive('md')`
+- Import variables in component files: `@import '../styles/variables.scss'`
+- Material-UI components can be styled with emotion or custom SCSS
+- **Naming convention:** Use BEM-like naming for CSS classes (e.g., `.card__header`, `.button--primary`)
 
 ### Code Quality
 - **ESLint** enforces: React Hooks rules, React Refresh rules, TypeScript best practices
@@ -110,11 +118,34 @@ bun add -D <package>  # Add dev dependency
 
 ## Integration Points
 
+### SCSS Setup
+SCSS is configured with Sass compiler. Key files:
+- `src/styles/variables.scss` - Global variables, mixins, and responsive breakpoints
+- `src/styles/globals.scss` - Global styles, CSS reset, base typography
+- `src/styles/components.scss` - Example reusable component styles
+
+**Usage example:**
+```scss
+// In a component SCSS file
+@import '../styles/variables.scss';
+
+.header {
+  @include flex-between;
+  padding: $spacing-lg;
+  background-color: $bg-primary;
+  border-bottom: 1px solid $border-color;
+
+  @include responsive('md') {
+    padding: $spacing-md;
+  }
+}
+```
+
 ### Material-UI Setup
 MUI is pre-configured with Emotion. When adding new components:
 1. Import from `@mui/material`: `import { Button, Box } from '@mui/material'`
 2. Use theme provider if customization needed (currently not configured, can extend)
-3. Emotion styled components via `@emotion/styled` for custom styling
+3. Can combine with SCSS for additional styling flexibility
 
 ### Future Facebook Features
 As FB Clone evolves, consider:
@@ -129,4 +160,6 @@ As FB Clone evolves, consider:
 - `eslint.config.js` - Flat ESLint config with TypeScript & React Hooks plugins
 - `tsconfig.app.json` - Application TypeScript settings (strict mode)
 - `commitlint.config.js` - Commit message validation rules
+- `src/styles/variables.scss` - SCSS variables and mixins
+- `src/styles/globals.scss` - Global styles and reset
 - `package.json` - Dependencies and build scripts
