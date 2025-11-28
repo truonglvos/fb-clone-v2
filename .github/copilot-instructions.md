@@ -69,7 +69,25 @@ Two git hooks run automatically:
 **Commit-msg hook** (`commit-msg`):
 - **Commitlint** validates commit messages against Conventional Commits standard
 - Format: `<type>(<scope>): <subject>` (e.g., `feat(auth): add login form`)
-- Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `ci`
+- **Allowed types:**
+  - `feat` - New feature
+  - `fix` - Bug fix
+  - `docs` - Documentation changes
+  - `style` - Code style changes (formatting, missing semicolons, etc.)
+  - `refactor` - Code refactoring without feature changes
+  - `perf` - Performance improvements
+  - `test` - Add or update tests
+  - `chore` - Dependency updates, build tools, project config
+  - `ci` - CI/CD pipeline configuration
+- **Examples:**
+  ```bash
+  git commit -m "feat(auth): add login form component"
+  git commit -m "fix(feed): resolve infinite scroll bug"
+  git commit -m "docs: update README with setup instructions"
+  git commit -m "style: format components with prettier"
+  git commit -m "refactor(api): extract API client logic"
+  git commit -m "chore: update MUI to latest version"
+  ```
 
 **If a commit hook fails**, fix the issues and retry. For message failures, use proper conventional format.
 
