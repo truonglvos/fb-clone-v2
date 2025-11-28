@@ -58,6 +58,14 @@ bun install           # Install dependencies
 bun dev               # Start dev server with HMR
 ```
 
+### Git Hooks with Husky
+Pre-commit hooks automatically run on `git commit`:
+- **ESLint** with `--fix` flag auto-corrects style issues in staged `.ts`/`.tsx` files
+- **Type checking** via `tsc --noEmit` validates TypeScript without emitting files
+- Uses `lint-staged` to check only modified files (faster than full project lint)
+
+**If a commit hook fails**, fix issues reported and re-stage files before committing.
+
 ### Verification Before Commit
 ```bash
 bun run lint          # Check TypeScript and ESLint violations
