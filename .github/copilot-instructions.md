@@ -59,12 +59,19 @@ bun dev               # Start dev server with HMR
 ```
 
 ### Git Hooks with Husky
-Pre-commit hooks automatically run on `git commit`:
+Two git hooks run automatically:
+
+**Pre-commit hook** (`pre-commit`):
 - **ESLint** with `--fix` flag auto-corrects style issues in staged `.ts`/`.tsx` files
 - **Type checking** via `tsc --noEmit` validates TypeScript without emitting files
 - Uses `lint-staged` to check only modified files (faster than full project lint)
 
-**If a commit hook fails**, fix issues reported and re-stage files before committing.
+**Commit-msg hook** (`commit-msg`):
+- **Commitlint** validates commit messages against Conventional Commits standard
+- Format: `<type>(<scope>): <subject>` (e.g., `feat(auth): add login form`)
+- Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `ci`
+
+**If a commit hook fails**, fix the issues and retry. For message failures, use proper conventional format.
 
 ### Verification Before Commit
 ```bash
@@ -103,4 +110,5 @@ As FB Clone evolves, consider:
 - `vite.config.ts` - Vite + React SWC configuration
 - `eslint.config.js` - Flat ESLint config with TypeScript & React Hooks plugins
 - `tsconfig.app.json` - Application TypeScript settings (strict mode)
+- `commitlint.config.js` - Commit message validation rules
 - `package.json` - Dependencies and build scripts
