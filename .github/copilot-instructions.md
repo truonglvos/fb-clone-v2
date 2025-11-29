@@ -7,6 +7,7 @@ FB Clone v2 is a React + TypeScript application built with Vite and styled using
 - React 19.2.0 with TypeScript
 - Vite (via rolldown-vite) for bundling and dev server
 - Material-UI (@mui/material) + Emotion for styling
+- React Router v7 for client-side routing
 - Axios for HTTP requests with interceptors
 - SWC for JSX compilation
 - Bun as the package manager
@@ -15,8 +16,37 @@ FB Clone v2 is a React + TypeScript application built with Vite and styled using
 
 ### Core Entry Point
 - `src/main.tsx` - Application bootstrap, renders `<App />` into `#root` DOM element with React StrictMode
-- `src/App.tsx` - Root component (currently placeholder Vite template)
+- `src/app/App.tsx` - Root component, initializes Router
+- `src/app/routes/index.tsx` - Router configuration with all route definitions
 - `index.html` - Single HTML file with `<div id="root"></div>` anchor and module script loader
+
+### Project Structure
+```
+src/
+├── app/                       # Root app component and routing
+│   ├── App.tsx                # Root component
+│   └── routes/
+│       ├── index.tsx          # Route definitions (import pages from features)
+│       └── Router.tsx         # Router provider component
+├── features/                  # Feature modules with pages, components, hooks
+│   ├── home/
+│   │   ├── pages/
+│   │   │   └── HomePage.tsx
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── api/
+│   │   └── index.ts
+│   ├── notFound/
+│   │   ├── pages/
+│   │   │   └── NotFoundPage.tsx
+│   │   └── index.ts
+│   └── [other features]
+├── services/                  # Shared API services (httpClient, authService, storageService)
+├── config/                    # Configuration files (env, appConfig)
+├── styles/                    # Global SCSS (variables, globals, components)
+├── assets/                    # Images, icons, static files
+└── main.tsx                   # Application entry point
+```
 
 ### Build Pipeline
 - **Dev**: `bun dev` → Vite dev server with HMR at http://localhost:5173
@@ -30,6 +60,7 @@ Strict mode enabled in `tsconfig.app.json`:
 - `noUnusedLocals: true` & `noUnusedParameters: true` - Flags unused declarations
 - `noUncheckedSideEffectImports: true` - Warns about imports with side effects
 - Target: ES2022, Module: ESNext
+- Path aliases: `@/*`, `@services/*`, `@config/*`, `@features/*` for cleaner imports
 
 ## Development Conventions
 
@@ -119,6 +150,39 @@ bun add -D <package>  # Add dev dependency
 
 ## Integration Points
 
+### React Router Setup
+Routes are configured in `src/app/routes/index.tsx` using React Router v7:
+- Page components live in `src/features/<feature>/pages/` folder within their respective features
+- Add routes in `src/app/routes/index.tsx` using `createBrowserRouter`
+- Use `Link` and `useNavigate` for navigation
+- 404 fallback uses wildcard `path: '*'`
+
+**Example adding a new route:**
+```tsx
+// In src/app/routes/index.tsx
+import { LoginPage } from '@features/auth/pages/LoginPage'
+import { HomePage } from '@features/home/pages/HomePage'
+
+const routes: RouteObject[] = [
+  {
+    path: '/',
+    element: <HomePage />,
+  },
+  {
+    path: '/login',
+    element: <LoginPage />,
+  },
+  {
+    path: '/profile/:id',
+    element: <ProfilePage />,
+  },
+  {
+    path: '*',
+    element: <NotFoundPage />,
+  },
+]
+```
+
 ### SCSS Setup
 SCSS is configured with Sass compiler. Key files:
 - `src/styles/variables.scss` - Global variables, mixins, and responsive breakpoints
@@ -128,7 +192,7 @@ SCSS is configured with Sass compiler. Key files:
 **Usage example:**
 ```scss
 // In a component SCSS file
-@use '../styles/variables' as *;
+@use '@styles/variables' as *;
 
 .header {
   @include flex-between;
@@ -141,52 +205,53 @@ SCSS is configured with Sass compiler. Key files:
   }
 }
 ```
+
+### Axios HTTP Client
+Axios is configured with request/response interceptors for API communication. Key files:
+- `src/services/httpClient.ts` - Axios instance with interceptors for auth tokens and error handling
+- `src/services/authService.ts` - Example API service for authentication endpoints
+- `src/services/storageService.ts` - Token management utilities
+- **Base URL:** Uses `VITE_API_BASE_URL` environment variable (defaults to `http://localhost:3000/api`)
+- **Request interceptor:** Automatically adds `Authorization: Bearer <token>` header from localStorage
+- **Response interceptor:** Handles 401 errors by clearing auth token and redirecting to login
+
+**Example creating a new API service:**
+```tsx
+// src/features/post/api/postService.ts
+import { httpClient } from '@services/httpClient'
+
+interface Post {
+  id: string
+  title: string
+  content: string
+}
+
+export const postService = {
+  getPosts: async () => httpClient.get<Post[]>('/posts'),
+  getPost: async (id: string) => httpClient.get<Post>(`/posts/${id}`),
+  createPost: async (data: Omit<Post, 'id'>) => 
+    httpClient.post<Post>('/posts', data),
+  updatePost: async (id: string, data: Partial<Post>) =>
+    httpClient.put<Post>(`/posts/${id}`, data),
+  deletePost: async (id: string) =>
+    httpClient.delete(`/posts/${id}`),
+}
+```
+
 ### Material-UI Setup
 MUI is pre-configured with Emotion. When adding new components:
 1. Import from `@mui/material`: `import { Button, Box } from '@mui/material'`
 2. Use theme provider if customization needed (currently not configured, can extend)
 3. Can combine with SCSS for additional styling flexibility
 
-### Axios HTTP Client
-Axios is configured with request/response interceptors for API communication. Key files:
-- `src/services/apiClient.ts` - Axios instance with interceptors for auth tokens and error handling
-- `src/services/authService.ts` - Example API service for authentication endpoints
-- **Base URL:** Uses `VITE_API_BASE_URL` environment variable (defaults to `http://localhost:3000/api`)
-- **Request interceptor:** Automatically adds `Authorization: Bearer <token>` header from localStorage
-- **Response interceptor:** Handles 401 errors by clearing auth token and redirecting to login
-
 ## Files to Know
 - `.github/copilot-instructions.md` - This file (AI guidelines)
-- `vite.config.ts` - Vite + React SWC configuration
+- `vite.config.ts` - Vite + React SWC configuration with path aliases
 - `eslint.config.js` - Flat ESLint config with TypeScript & React Hooks plugins
 - `tsconfig.app.json` - Application TypeScript settings (strict mode)
 - `commitlint.config.js` - Commit message validation rules
-- `src/styles/variables.scss` - SCSS variables and mixins
-- `src/styles/globals.scss` - Global styles and reset
-- `src/services/apiClient.ts` - Axios instance with interceptors
-- `src/services/authService.ts` - Example API service
-- `package.json` - Dependencies and build scripts
-
-// Token is automatically added to subsequent requests
-const currentUser = await authService.getCurrentUser()
-```
-
-Create additional service files in `src/services/` for different API domains (postService, userService, etc.)t configured, can extend)
-3. Can combine with SCSS for additional styling flexibility
-
-### Future Facebook Features
-As FB Clone evolves, consider:
-- State management library (Redux, Zustand, Context API) for feed/user data
-- Routing library (React Router) for page navigation
-- API client setup for backend communication
-- Authentication flow integration
-
-## Files to Know
-- `.github/copilot-instructions.md` - This file (AI guidelines)
-- `vite.config.ts` - Vite + React SWC configuration
-- `eslint.config.js` - Flat ESLint config with TypeScript & React Hooks plugins
-- `tsconfig.app.json` - Application TypeScript settings (strict mode)
-- `commitlint.config.js` - Commit message validation rules
+- `src/app/routes/index.tsx` - React Router configuration
+- `src/services/httpClient.ts` - Axios HTTP client with interceptors
 - `src/styles/variables.scss` - SCSS variables and mixins
 - `src/styles/globals.scss` - Global styles and reset
 - `package.json` - Dependencies and build scripts
