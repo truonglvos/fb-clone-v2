@@ -1,5 +1,10 @@
+import { RootProvider } from './providers'
 import { Router } from './routes/Router'
 
 export default function App() {
-  return <Router />
+  return (
+    <RootProvider>
+      <Router />
+    </RootProvider>
+  )
 }

@@ -23,18 +23,17 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    
+
     /* Path alias */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
       "@assets/*": ["src/assets/*"],
       "@services/*": ["src/services/*"],
       "@config/*": ["src/config/*"],
-      "@features": ["src/features"],
-      "@features/*": ["src/features/*"]
+      "@features/*": ["src/features/*"],
+      "@shared/*": ["src/shared/*"]
     }
   },
-  "include": ["src"]
+  "include": ["./src/**/*.ts","./src/**/*.tsx"]
 }
 

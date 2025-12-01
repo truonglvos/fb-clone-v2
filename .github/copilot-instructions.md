@@ -24,7 +24,11 @@ FB Clone v2 is a React + TypeScript application built with Vite and styled using
 ```
 src/
 ├── app/                       # Root app component and routing
-│   ├── App.tsx                # Root component
+│   ├── App.tsx                # Root component with providers
+│   ├── providers/             # Context providers (Theme, Auth, etc)
+│   │   ├── ThemeProvider.tsx  # MUI theme configuration
+│   │   ├── AuthProvider.tsx   # Authentication context
+│   │   └── index.tsx          # RootProvider that combines all
 │   └── routes/
 │       ├── index.tsx          # Route definitions (import pages from features)
 │       └── Router.tsx         # Router provider component
@@ -149,6 +153,27 @@ bun add -D <package>  # Add dev dependency
 - **Type errors**: Run `bun run build` to see full type check output from `tsc`
 
 ## Integration Points
+
+### App Providers Setup
+Providers are configured in `src/app/providers/` and combined in `RootProvider`:
+- **ThemeProvider** - MUI theme configuration (colors, typography, component overrides)
+- **AuthProvider** - Authentication context with `useAuth()` hook for auth state
+- **RootProvider** - Combines all providers and wraps the app in `App.tsx`
+
+**Using AuthProvider in components:**
+```tsx
+import { useAuth } from '@/app/providers/AuthProvider'
+
+export function LoginButton() {
+  const { user, login, logout, isAuthenticated } = useAuth()
+  
+  if (isAuthenticated) {
+    return <button onClick={logout}>Logout {user?.name}</button>
+  }
+  
+  return <button onClick={() => login('email', 'password')}>Login</button>
+}
+```
 
 ### React Router Setup
 Routes are configured in `src/app/routes/index.tsx` using React Router v7:
