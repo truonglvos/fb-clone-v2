@@ -1,3 +1,4 @@
+import { Login } from '@features/auth/pages/Login';
 import { HomePage } from '@features/home';
 import { NotFoundPage } from '@features/notFound';
 import { createBrowserRouter, type RouteObject } from 'react-router-dom';
@@ -5,12 +6,17 @@ import { ProtectedRoute } from './ProtectedRoute';
 
 const routes: RouteObject[] = [
 	{
-		path: '/',
-		element: <HomePage />,
+		path: '/login',
+		element: <Login />,
 	},
 	{
 		element: <ProtectedRoute />,
-		children: [],
+		children: [
+			{
+				path: 'home',
+				element: <HomePage />,
+			},
+		],
 	},
 	{
 		path: '*',
