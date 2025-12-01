@@ -1,13 +1,16 @@
+import { RootProvider } from '@app/providers';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import './styles/globals.scss';
 import App from './app/App.tsx';
+import './styles/globals.scss';
 
 const rootElement = document.getElementById('root');
 if (rootElement) {
 	createRoot(rootElement).render(
 		<StrictMode>
-			<App />
+			<RootProvider>
+				<App />
+			</RootProvider>
 		</StrictMode>,
 	);
 } else {

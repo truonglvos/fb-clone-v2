@@ -31,7 +31,8 @@
 			"@services/*": ["src/services/*"],
 			"@config/*": ["src/config/*"],
 			"@features/*": ["src/features/*"],
-			"@shared/*": ["src/shared/*"]
+			"@shared/*": ["src/shared/*"],
+			"@app/*": ["src/app/*"]
 		}
 	},
 	"include": ["./src/**/*.ts", "./src/**/*.tsx"]

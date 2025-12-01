@@ -7,7 +7,6 @@ export default defineConfig({
 	plugins: [react()],
 	resolve: {
 		alias: {
-			'@': path.resolve(__dirname, './src'),
 			'@components': path.resolve(__dirname, './src/components'),
 			'@assets': path.resolve(__dirname, './src/assets'),
 			'@config': path.resolve(__dirname, './src/config'),
@@ -17,6 +16,7 @@ export default defineConfig({
 			'@routes': path.resolve(__dirname, './src/routes'),
 			'@shared': path.resolve(__dirname, './src/shared'),
 			'@styles': path.resolve(__dirname, './src/styles'),
+			'@app': path.resolve(__dirname, './src/app'),
 		},
 	},
 });
